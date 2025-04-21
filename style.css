@@ -38,3 +38,12 @@ html {
 .black {
   background-color: #444;
 }
+
+.piece {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: pink;
+  margin: auto;
+  margin-top: 15px;
+}

@@ -1,20 +1,53 @@
-let board = document.querySelector('.board'); // acessa o tabuleiro a partir da classe board
+const board = document.querySelector('.board');
 
-// loop para percorrer cada linha e cada coluna, adicionando uma div e a classe square em cada uma
 for (let row = 0; row < 8; row++) {
   for (let col = 0; col < 8; col++) {
-    let square = document.createElement('div');
-    square.classList.add('square'); // responsável pelo tamanho de cada casa do tabuleiro
+    const square = document.createElement('div');
+    square.classList.add('square');
+    square.dataset.row = row;
+    square.dataset.col = col;
 
-    //percorre as casas do tabuleiro preenchendo com as cores branco e preto
-    if ((row + col) % 2 === 0) {
-      square.classList.add('white');
-      console.log('chegou');
-    } else {
-      square.classList.add('black');
-      console.log('chegou');
+    const isWhite = (row + col) % 2 === 0;
+    square.classList.add(isWhite ? 'white' : 'black');
+
+    // Adiciona UMA peça (bolinha branca) na posição inicial (linha 6, coluna 4)
+    if (row === 6 && col === 4) {
+      const piece = document.createElement('div');
+      piece.classList.add('piece');
+      piece.style.backgroundColor = 'white';
+      piece.dataset.piece = 'true';
+      square.appendChild(piece);
     }
 
-    board.appendChild(square); //adiciona a div square dentro da div do tabuleiro
+    board.appendChild(square);
   }
 }
+
+// Evento de clique para mover a peça
+board.addEventListener('click', (e) => {
+  const target = e.target;
+
+  // Verifica se clicou numa peça
+  if (target.classList.contains('piece')) {
+    const currentSquare = target.parentElement;
+    const currentRow = parseInt(currentSquare.dataset.row);
+    const currentCol = parseInt(currentSquare.dataset.col);
+
+    // Define nova posição (um quadrado acima)
+    const newRow = currentRow - 1;
+    const newCol = currentCol;
+
+    // Encontra a nova casa
+    const squares = document.querySelectorAll('.square');
+    const destination = Array.from(squares).find(
+      (sq) =>
+        parseInt(sq.dataset.row) === newRow &&
+        parseInt(sq.dataset.col) === newCol
+    );
+
+    // Move a peça para o novo quadrado se estiver vazio
+    if (destination && destination.children.length === 0) {
+      destination.appendChild(target);
+    }
+  }
+});
